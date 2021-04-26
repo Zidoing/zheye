@@ -32,16 +32,6 @@ const testData: ColumnProps[] = [
     title: 'test1专栏',
     description: '这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个',
     avatar: 'https://avatars.githubusercontent.com/u/29775873?v=4'
-  }, {
-    id: 5,
-    title: 'test1专栏',
-    description: '这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个',
-    avatar: 'https://avatars.githubusercontent.com/u/29775873?v=4'
-  }, {
-    id: 6,
-    title: 'test1专栏',
-    description: '这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个这是一个',
-    avatar: 'https://avatars.githubusercontent.com/u/29775873?v=4'
   }
 ]
 
