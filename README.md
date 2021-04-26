@@ -1,4 +1,7 @@
 # zheye
+## description
+
+使用ts + vue3 进行开发  有相关组件自研的方式.
 
 ## Project setup
 ```
