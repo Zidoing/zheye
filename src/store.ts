@@ -5,6 +5,7 @@ export interface UserProps {
   isLogin: boolean;
   name?: string;
   id?: number;
+  columnId?: number
 }
 
 export interface GlobalDataProps {
@@ -18,7 +19,9 @@ const store = createStore<GlobalDataProps>({
     columns: testData,
     posts: testPosts,
     user: {
-      isLogin: false
+      isLogin: true,
+      name: 'zidon',
+      columnId: 1
     }
   },
   mutations: {
@@ -30,6 +33,9 @@ const store = createStore<GlobalDataProps>({
         name: 'zhoulei'
       }
       console.log(state.user)
+    },
+    createPost (state, newPost) {
+      state.posts.push(newPost)
     }
   },
   // vue里面的计算属性
@@ -40,8 +46,8 @@ const store = createStore<GlobalDataProps>({
     getColumnById: (state) => (id: number) => {
       return state.columns.find(c => c.id === id)
     },
-    getPostsByCid: (state) => (cid: number) => {
-      return state.posts.filter(post => post.columnId === cid)
+    getPostsByCid: (state) => {
+      return (cid: number) => state.posts.filter(post => post.columnId === cid)
     }
   }
 })

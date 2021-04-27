@@ -11,7 +11,7 @@
       <li class="list-inline-item">
         <dropdown :title="`你好 ${user.name}`">
           <dropdown-item>
-            <a href="#" class="dropdown-item">新建文章</a>
+            <router-link :to="{name:'post-create'}" class="dropdown-item">新建文章</router-link>
           </dropdown-item>
           <dropdown-item>
             <a href="#" class="dropdown-item">编辑资料</a>
