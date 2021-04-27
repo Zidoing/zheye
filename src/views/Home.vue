@@ -6,13 +6,16 @@
 
 <script lang="ts">
 import ColumnList from '@/components/ColumnList'
-import { defineComponent } from 'vue'
-import { testData as list } from '../../testData'
+import { computed, defineComponent } from 'vue'
+import { useStore } from 'vuex'
+import { GlobalDataProps } from '@/store'
 
 export default defineComponent({
   name: 'Home',
   components: { ColumnList },
   setup () {
+    const store = useStore<GlobalDataProps>()
+    const list = computed(() => store.state.columns)
     return { list }
   }
 })

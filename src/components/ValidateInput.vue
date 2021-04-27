@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent, onMounted, PropType, reactive } from 'vue'
-import { emitter } from './ValidateForm.vue'
+import { emitter } from '@/components/ValidateForm.vue'
 
 const emailReg = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/
 

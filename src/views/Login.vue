@@ -37,6 +37,7 @@ import { useRouter } from 'vue-router'
 
 import ValidateForm from '@/components/ValidateForm.vue'
 import ValidateInput, { RulesProp } from '@/components/ValidateInput.vue'
+import { useStore } from 'vuex'
 
 export default defineComponent({
   name: 'Login',
@@ -47,9 +48,12 @@ export default defineComponent({
   setup () {
     const emailVal = ref('')
     const router = useRouter()
+    const store = useStore()
+
     const onFormSubmit = (result: boolean) => {
       if (result) {
         router.push({ name: 'home' })
+        store.commit('login')
       }
     }
     const emailRules: RulesProp = [
