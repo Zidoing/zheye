@@ -68,7 +68,7 @@ export default defineComponent({
         const newPost: PostProps = {
           id: new Date().getTime(),
           createdAt: '12321',
-          columnId,
+          column: columnId,
           title: titleVal.value,
           content: contentVal.value
         }

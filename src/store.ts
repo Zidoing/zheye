@@ -1,5 +1,4 @@
 import { createStore } from 'vuex'
-import { testPosts } from './testData'
 import axios from 'axios'
 
 interface ImageProps {
@@ -18,10 +17,11 @@ export interface ColumnProps {
 export interface PostProps {
   id: number;
   title: string;
-  content: string;
-  image?: string;
+  excerpt?: string;
+  content?: string;
+  image?: ImageProps;
   createdAt: string;
-  columnId: string;
+  column: string;
 }
 
 export interface UserProps {
@@ -40,7 +40,7 @@ export interface GlobalDataProps {
 const store = createStore<GlobalDataProps>({
   state: {
     columns: [],
-    posts: testPosts,
+    posts: [],
     user: {
       isLogin: true,
       name: 'zidon',
@@ -63,16 +63,23 @@ const store = createStore<GlobalDataProps>({
 
     fetchColumns (state, rawData) {
       state.columns = rawData.data.list
+    },
+    fetchColumn (state, rawData) {
+      state.columns = [rawData.data]
+    },
+    fetchPosts (state, rawData) {
+      state.posts = rawData.data.list
     }
   },
   // vue里面的计算属性
   getters: {
 
     getColumnById: (state) => (id: string) => {
+      console.log(state.columns, 'sss')
       return state.columns.find(c => c._id === id)
     },
     getPostsByCid: (state) => {
-      return (cid: string) => state.posts.filter(post => post.columnId === cid)
+      return (cid: string) => state.posts.filter(post => post.column === cid)
     }
   },
 
@@ -80,6 +87,16 @@ const store = createStore<GlobalDataProps>({
     fetchColumns (context) {
       axios.get('columns?currentPage=1&pageSize=5').then(response => {
         context.commit('fetchColumns', response.data)
+      })
+    },
+    fetchColumn ({ commit }, cid) {
+      axios.get(`columns/${cid}`).then(response => {
+        commit('fetchColumn', response.data)
+      })
+    },
+    fetchPosts ({ commit }, cid) {
+      axios.get(`columns/${cid}/posts`).then(response => {
+        commit('fetchPosts', response.data)
       })
     }
   }
