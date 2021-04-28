@@ -1,6 +1,7 @@
 <template>
   <div class="container">
     <global-header :user="user"></global-header>
+    <h1>{{ error.message }}</h1>
     <loader v-if="isLoading">正在加载</loader>
     <router-view></router-view>
     <footer class="text-center py-4 text-secondary bg-light mt-6">
@@ -26,12 +27,17 @@ import Loader from '@/components/Loader.vue'
 
 export default defineComponent({
   name: 'App',
-  components: { Loader, GlobalHeader },
+  components: {
+    Loader,
+    GlobalHeader
+  },
   setup () {
     const store = useStore()
     const user = computed(() => store.state.user)
     const isLoading = computed(() => store.state.loading)
+    const error = computed(() => store.state.error)
     return {
+      error,
       user,
       isLoading
     }

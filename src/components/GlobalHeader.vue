@@ -9,7 +9,7 @@
     </ul>
     <ul v-else>
       <li class="list-inline-item">
-        <dropdown :title="`你好 ${user.name}`">
+        <dropdown :title="`你好 ${user.nickName}`">
           <dropdown-item>
             <router-link :to="{name:'post-create'}" class="dropdown-item">新建文章</router-link>
           </dropdown-item>

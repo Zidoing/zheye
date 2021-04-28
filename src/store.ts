@@ -26,12 +26,18 @@ export interface PostProps {
 
 export interface UserProps {
   isLogin: boolean;
-  name?: string;
+  nickName?: string;
   id?: number;
-  columnId?: number
+  column?: string
+}
+
+export interface GlobalErrorProps {
+  status: boolean;
+  message?: string;
 }
 
 export interface GlobalDataProps {
+  error: GlobalErrorProps;
   token: string;
   loading: boolean;
   columns: ColumnProps[];
@@ -51,14 +57,17 @@ const postAndCommit = async (url: string, mutationName: string, commit: Commit, 
 }
 const store = createStore<GlobalDataProps>({
   state: {
-    token: '',
+    error: {
+      status: false
+    },
+    token: localStorage.getItem('token') || '',
     loading: false,
     columns: [],
     posts: [],
     user: {
       isLogin: false,
-      name: 'zidon',
-      columnId: 1
+      nickName: 'zidon',
+      column: '1'
     }
   },
   mutations: {
@@ -89,6 +98,17 @@ const store = createStore<GlobalDataProps>({
     },
     login (state, rawData) {
       state.token = rawData.data.token
+      axios.defaults.headers.common.Authorization = `Bearer ${state.token}`
+      localStorage.setItem('token', state.token)
+    },
+    fetchCurrentUser (state, rawData) {
+      state.user = {
+        isLogin: true,
+        ...rawData.data
+      }
+    },
+    setError (state, e: GlobalErrorProps) {
+      state.error = e
     }
   },
   // vue里面的计算属性
@@ -120,6 +140,14 @@ const store = createStore<GlobalDataProps>({
     },
     login ({ commit }, payload) {
       return postAndCommit('/user/login', 'login', commit, payload)
+    },
+    fetchCurrentUser ({ commit }) {
+      getAndCommit('user/current', 'fetchCurrentUser', commit)
+    },
+    loginAndFetch ({ dispatch }, loginData) {
+      return dispatch('login', loginData).then(() => {
+        return dispatch('fetchCurrentUser')
+      })
     }
   }
 })
