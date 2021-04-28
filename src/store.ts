@@ -1,4 +1,4 @@
-import { createStore } from 'vuex'
+import { Commit, createStore } from 'vuex'
 import axios from 'axios'
 
 interface ImageProps {
@@ -32,13 +32,20 @@ export interface UserProps {
 }
 
 export interface GlobalDataProps {
+  loading: boolean;
   columns: ColumnProps[];
   posts: PostProps[];
   user: UserProps;
 }
 
+const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
+  const { data } = await axios.get(url)
+  commit(mutationName, data)
+}
+
 const store = createStore<GlobalDataProps>({
   state: {
+    loading: false,
     columns: [],
     posts: [],
     user: {
@@ -69,6 +76,9 @@ const store = createStore<GlobalDataProps>({
     },
     fetchPosts (state, rawData) {
       state.posts = rawData.data.list
+    },
+    setLoading (state, status) {
+      state.loading = status
     }
   },
   // vue里面的计算属性
@@ -84,16 +94,15 @@ const store = createStore<GlobalDataProps>({
   },
 
   actions: {
-    fetchColumns (context) {
-      axios.get('columns?currentPage=1&pageSize=5').then(response => {
-        context.commit('fetchColumns', response.data)
-      })
+    // 使用 async await 方式获取数据
+    async fetchColumns ({ commit }) {
+      await getAndCommit('columns', 'fetchColumns', commit)
     },
+
     fetchColumn ({ commit }, cid) {
-      axios.get(`columns/${cid}`).then(response => {
-        commit('fetchColumn', response.data)
-      })
+      getAndCommit(`columns/${cid}`, 'fetchColumn', commit)
     },
+
     fetchPosts ({ commit }, cid) {
       axios.get(`columns/${cid}/posts`).then(response => {
         commit('fetchPosts', response.data)
