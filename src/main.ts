@@ -19,11 +19,9 @@ axios.interceptors.response.use(config => {
   }, 1000)
   return config
 })
-axios.get('columns?currentPage=1&pageSize=5').then(resp => {
-  console.log(resp.data)
-})
 
 const app = createApp(App)
+
 app.use(store)
 app.use(router)
 app.mount('#app')

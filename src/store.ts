@@ -32,6 +32,7 @@ export interface UserProps {
 }
 
 export interface GlobalDataProps {
+  token: string;
   loading: boolean;
   columns: ColumnProps[];
   posts: PostProps[];
@@ -43,27 +44,33 @@ const getAndCommit = async (url: string, mutationName: string, commit: Commit) =
   commit(mutationName, data)
 }
 
+const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
+  const { data } = await axios.post(url, payload)
+  commit(mutationName, data)
+  return data
+}
 const store = createStore<GlobalDataProps>({
   state: {
+    token: '',
     loading: false,
     columns: [],
     posts: [],
     user: {
-      isLogin: true,
+      isLogin: false,
       name: 'zidon',
       columnId: 1
     }
   },
   mutations: {
-    login (state) {
-      console.log('doing login')
-      state.user = {
-        ...state.user,
-        isLogin: true,
-        name: 'zhoulei'
-      }
-      console.log(state.user)
-    },
+    // login (state) {
+    //   console.log('doing login')
+    //   state.user = {
+    //     ...state.user,
+    //     isLogin: true,
+    //     name: 'zhoulei'
+    //   }
+    //   console.log(state.user)
+    // },
     createPost (state, newPost) {
       state.posts.push(newPost)
     },
@@ -79,6 +86,9 @@ const store = createStore<GlobalDataProps>({
     },
     setLoading (state, status) {
       state.loading = status
+    },
+    login (state, rawData) {
+      state.token = rawData.data.token
     }
   },
   // vue里面的计算属性
@@ -107,6 +117,9 @@ const store = createStore<GlobalDataProps>({
       axios.get(`columns/${cid}/posts`).then(response => {
         commit('fetchPosts', response.data)
       })
+    },
+    login ({ commit }, payload) {
+      return postAndCommit('/user/login', 'login', commit, payload)
     }
   }
 })
