@@ -36,9 +36,6 @@ const router = createRouter({
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(store.state.user.isLogin)
-  console.log('to', to)
-  console.log('from', from)
   if (to.meta.requiredLogin && !store.state.user.isLogin) {
     next({ name: 'login' })
   } else if (to.meta.redirectAlreadyLogin && store.state.user.isLogin) {

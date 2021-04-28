@@ -35,7 +35,7 @@ import ValidateForm from '@/components/ValidateForm.vue'
 import ValidateInput, { RulesProp } from '@/components/ValidateInput.vue'
 import { useRouter } from 'vue-router'
 import { useStore } from 'vuex'
-import { PostProps } from '@/testData'
+import { PostProps } from '@/store'
 
 export default defineComponent({
   name: 'CreatePost',
