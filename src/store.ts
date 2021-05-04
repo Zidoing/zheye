@@ -1,7 +1,13 @@
 import { Commit, createStore } from 'vuex'
 import axios from 'axios'
 
-interface ImageProps {
+export interface ResponseType<P = Record<string, never>> {
+  code: number;
+  msg: string;
+  data: P;
+}
+
+export interface ImageProps {
   _id?: string;
   url?: string;
   createAt?: string
@@ -19,7 +25,7 @@ export interface PostProps {
   title: string;
   excerpt?: string;
   content?: string;
-  image?: ImageProps;
+  image?: ImageProps | string;
   createdAt: string;
   column: string;
 }
@@ -48,6 +54,7 @@ export interface GlobalDataProps {
 const getAndCommit = async (url: string, mutationName: string, commit: Commit) => {
   const { data } = await axios.get(url)
   commit(mutationName, data)
+  return data
 }
 
 const postAndCommit = async (url: string, mutationName: string, commit: Commit, payload: any) => {
@@ -109,6 +116,12 @@ const store = createStore<GlobalDataProps>({
     },
     setError (state, e: GlobalErrorProps) {
       state.error = e
+    },
+    logout (state) {
+      state.token = ''
+      state.user = { isLogin: false }
+      localStorage.removeItem('token')
+      delete axios.defaults.headers.common.Authorization
     }
   },
   // vue里面的计算属性
@@ -126,11 +139,11 @@ const store = createStore<GlobalDataProps>({
   actions: {
     // 使用 async await 方式获取数据
     async fetchColumns ({ commit }) {
-      await getAndCommit('columns', 'fetchColumns', commit)
+      return await getAndCommit('columns', 'fetchColumns', commit)
     },
 
     fetchColumn ({ commit }, cid) {
-      getAndCommit(`columns/${cid}`, 'fetchColumn', commit)
+      return getAndCommit(`columns/${cid}`, 'fetchColumn', commit)
     },
 
     fetchPosts ({ commit }, cid) {
@@ -142,12 +155,15 @@ const store = createStore<GlobalDataProps>({
       return postAndCommit('/user/login', 'login', commit, payload)
     },
     fetchCurrentUser ({ commit }) {
-      getAndCommit('user/current', 'fetchCurrentUser', commit)
+      return getAndCommit('user/current', 'fetchCurrentUser', commit)
     },
     loginAndFetch ({ dispatch }, loginData) {
       return dispatch('login', loginData).then(() => {
         return dispatch('fetchCurrentUser')
       })
+    },
+    createPost ({ commit }, payload) {
+      return postAndCommit('/posts', 'createPost', commit, payload)
     }
   }
 })

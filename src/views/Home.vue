@@ -1,6 +1,10 @@
 <template>
   <div>
-    <uploader action="/upload" :before-upload="beforeUpload"></uploader>
+    <uploader action="/upload" :before-upload="beforeUpload" @file-uploaded="onFileUploaded">
+      <template #uploaded="dataProps">
+        <img :src="dataProps.uploadedData.data.url" alt="" width="500">
+      </template>
+    </uploader>
     <column-list :list="list"></column-list>
   </div>
 </template>
@@ -8,7 +12,7 @@
 <script lang="ts">
 import { computed, defineComponent, onMounted } from 'vue'
 import { useStore } from 'vuex'
-import { GlobalDataProps } from '@/store'
+import { GlobalDataProps, ImageProps, ResponseType } from '@/store'
 import ColumnList from '@/components/ColumnList.vue'
 import Uploader from '@/components/Uploader.vue'
 import createMessage from '@/components/createMessage'
@@ -34,9 +38,15 @@ export default defineComponent({
       }
       return isJPG
     }
+
+    const onFileUploaded = (rawData: ResponseType<ImageProps>) => {
+      console.log(rawData)
+      createMessage(`上传图片ID ${rawData.data._id}`, 'success')
+    }
     return {
       list,
-      beforeUpload
+      beforeUpload,
+      onFileUploaded
     }
   }
 })
